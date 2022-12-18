@@ -1,3 +1,39 @@
+# Update
+
+The bug goes away when `given Quotes = decl.asQuotes`.
+
+Indeed, Scala gives a better error message when `-Xcheck-macros` is activated:
+
+```
+[error] -- Error: /home/nos/working/rc/scalabug13955/src/test/scala/AdderTest.scala:6:31 
+[error]  6 |    val adder = Adder.makeAdder(5)
+[error]    |                ^^^^^^^^^^^^^^^^^^
+[error]    |Exception occurred while executing macro expansion.
+[error]    |java.lang.AssertionError: assertion failed: Tree had an unexpected owner for val result
+[error]    |Expected: method add (AdderTest._$_$_$Adder_impl.add)
+[error]    |But was: val macro (AdderTest._$_$macro)
+[error]    |
+[error]    |
+[error]    |The code of the definition of val result is
+[error]    |val result: scala.Int = x.+(5)
+[error]    |
+[error]    |which was found in the code
+[error]    |{
+[error]    |  val result: scala.Int = x.+(5)
+[error]    |
+[error]    |  (result: scala.Int)
+[error]    |}
+[error]    |
+[error]    |which has the AST representation
+[error]    |Inlined(Some(TypeIdent("Adder$")), Nil, Block(List(ValDef("result", Inferred(), Some(Apply(Select(Inlined(None, Nil, Ident("x")), "+"), List(Inlined(None, Nil, Inlined(None, Nil, Literal(IntConstant(5))))))))), Typed(Ident("result"), Inferred())))
+[error]    |
+[error]    |
+[error]    |
+[error]    |Tip: The owner of a tree can be changed using method `Tree.changeOwner`.
+[error]    |Tip: The default owner of definitions created in quotes can be changed using method `Symbol.asQuotes`.
+```
+
+
 # Dotty Bug 13955
 
 Demonstration code for https://github.com/lampepfl/dotty/issues/13955

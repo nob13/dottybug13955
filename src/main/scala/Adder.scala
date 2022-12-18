@@ -24,6 +24,8 @@ object Adder {
         )
         )
     }
+
+
     val parents  = List(TypeTree.of[Object], TypeTree.of[Adder])
     val implName = "Adder_impl"
     val cls      = Symbol.newClass(Symbol.spliceOwner, implName, parents = parents.map(_.tpe), decls, selfType = None)
@@ -32,14 +34,16 @@ object Adder {
         val decl = cls.declaredMethod("add").head
         DefDef(
           decl,
-          argss => Some('{
+          argss => Some{
+            given Quotes = decl.asQuotes // This fixes the problem
+            '{
             // Works
             // ${argss.head.head.asExprOf[Int]} + ${y}
 
-            // Crashes
+            // Crashes (not anymore)
             val result = ${argss.head.head.asExprOf[Int]} + ${y}
             result
-          }.asTerm)
+          }.asTerm}
         )
       }
     )

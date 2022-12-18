@@ -1,6 +1,7 @@
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
 ThisBuild / scalaVersion := "3.2.1"
+ThisBuild / scalacOptions += "-Xcheck-macros"
 
 lazy val root = (project in file("."))
   .settings(
